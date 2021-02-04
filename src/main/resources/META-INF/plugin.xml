@@ -1,0 +1,45 @@
+<idea-plugin>
+    <id>com.gitee.hperfect.idea-plugin</id>
+    <name>apiUploader</name>
+    <vendor email="1355473748@qq.com" url="https://github.com/huan-xi">huan-xi</vendor>
+
+    <description><![CDATA[
+      上传springmvc接口到yapi<br>
+      <em>支持注释和swagger注解,选中class或method右击点击上传到yapi即可</em>
+    ]]></description>
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <toolWindow id="testToolWindows" icon="AllIcons.General.Modified" anchor="right"
+                    factoryClass="com.gitee.hperfect.task.windows.TestWindowsFactory">
+
+        </toolWindow>
+    </extensions>
+
+    <actions>
+        <action id="UploadToYapi" class="com.gitee.hperfect.yapi.action.UploadToYapiAction" text="上传到yapi"
+                description="UploadToYapi">
+            <add-to-group group-id="EditorLangPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt u"/>
+        </action>
+        <action id="ShowHello" class="com.gitee.hperfect.tool.ShowHelloAction" text="ShowHello">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+        <action id="添加任务" class="com.gitee.hperfect.task.AddTaskAction" text="添加任务">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta ENTER"/>
+        </action>
+    </actions>
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable parentId="tools" instance="com.gitee.hperfect.test.settings.AppSettingsConfigurable"
+                                 id="org.intellij.sdk.settings.AppSettingsConfigurable"
+                                 displayName="设置界面"/>
+        <applicationService serviceImplementation="com.gitee.hperfect.test.settings.AppSettingsState"/>
+    </extensions>
+</idea-plugin>
