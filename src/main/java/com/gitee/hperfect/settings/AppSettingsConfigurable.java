@@ -1,6 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.gitee.hperfect.test.settings;
+package com.gitee.hperfect.settings;
 
 import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.Nls;
@@ -21,42 +21,42 @@ public class AppSettingsConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "test插件设置";
+        return "yapi项目配置";
     }
 
-    @Override
-    public JComponent getPreferredFocusedComponent() {
-        return mySettingsComponent.getPreferredFocusedComponent();
-    }
 
     @Nullable
     @Override
     public JComponent createComponent() {
         mySettingsComponent = new AppSettingsComponent();
-        return mySettingsComponent.getPanel();
+        return mySettingsComponent.getMyMainPanel();
     }
 
     @Override
     public boolean isModified() {
         AppSettingsState settings = AppSettingsState.getInstance();
-        boolean modified = !mySettingsComponent.getUserNameText().equals(settings.userId);
-        modified |= mySettingsComponent.getIdeaUserStatus() != settings.ideaStatus;
+        boolean modified = !mySettingsComponent.getYapiHostText().getText().equals(settings.getYapiHost());
+        modified |= !mySettingsComponent.getYapiTokenText().getText().equals(settings.getYapiToken());
+        modified |= !mySettingsComponent.getYapiProjectIdText().getText().equals(settings.getYapiProjectId());
         return modified;
     }
 
     @Override
     public void apply() {
         AppSettingsState settings = AppSettingsState.getInstance();
-        settings.userId = mySettingsComponent.getUserNameText();
-        settings.ideaStatus = mySettingsComponent.getIdeaUserStatus();
+        settings.setYapiHost(mySettingsComponent.getYapiHostText().getText());
+        settings.setYapiToken(mySettingsComponent.getYapiTokenText().getText());
+        settings.setYapiProjectId(mySettingsComponent.getYapiProjectIdText().getText());
     }
 
     @Override
     public void reset() {
         AppSettingsState settings = AppSettingsState.getInstance();
-        mySettingsComponent.setUserNameText(settings.userId);
-        mySettingsComponent.setIdeaUserStatus(settings.ideaStatus);
+        mySettingsComponent.getYapiProjectIdText().setText(settings.getYapiProjectId());
+        mySettingsComponent.getYapiTokenText().setText(settings.getYapiToken());
+        mySettingsComponent.getYapiHostText().setText(settings.getYapiHost());
     }
+
 
     @Override
     public void disposeUIResources() {

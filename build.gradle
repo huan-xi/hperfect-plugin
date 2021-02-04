@@ -1,0 +1,36 @@
+plugins {
+    id 'org.jetbrains.intellij' version '0.6.5'
+}
+
+group 'com.gitee.hperfect'
+version '1.0'
+
+sourceCompatibility = 1.8
+repositories {
+    mavenCentral()
+    jcenter()
+}
+dependencies {
+    compile "cn.hutool:hutool-http:5.4.1"
+    compile "cn.hutool:hutool-core:5.4.1"
+    implementation 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version 'LATEST-EAP-SNAPSHOT'
+    pluginName 'yapi-parser'
+    updateSinceUntilBuild false
+    sameSinceUntilBuild false
+    plugins = ['com.intellij.java']
+
+}
+patchPluginXml {
+    changeNotes ""
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+buildSearchableOptions.enabled = false

@@ -8,14 +8,12 @@ import com.gitee.hperfect.yapi.model.ApiParamModelNode;
 import com.gitee.hperfect.yapi.parse.GenericType;
 import com.gitee.hperfect.yapi.parse.ParseUtils;
 import com.gitee.hperfect.yapi.parse.parser.ApiModelParamParser;
-import com.gitee.hperfect.yapi.parse.parser.ApiModelParser;
 import com.google.common.base.Strings;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.GlobalSearchScope;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,7 +102,7 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
      * @param psiParameter
      * @return
      */
-    public static String parseDesc(PsiMethod method, PsiAnnotation apiParam, PsiParameter psiParameter) {
+    public static String parseParamDesc(PsiMethod method, PsiAnnotation apiParam, PsiParameter psiParameter) {
         String desc = "";
         if (apiParam != null) {
             desc = ParseUtils.getPsiAnnotationValue(apiParam);
@@ -155,7 +153,7 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
         apiParamModel.setType(type);
         apiParamModel.setName(parseName(psiParameter, requestParam, apiParam));
         //解析描述(注释,swagger)
-        apiParamModel.setDesc(parseDesc(method, apiParam, psiParameter));
+        apiParamModel.setDesc(parseParamDesc(method, apiParam, psiParameter));
         //解析是否必填(param,swagger)
         //默认值
         return apiParamModel;
@@ -205,7 +203,7 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
                     if (isArrayType(genericClass)) {
                         System.out.println("开始解析数组属性");
                         apiParamModelNode.getParamModelList().add(parseFiledArray(field, genericClass, project));
-                        return apiParamModelNode;
+                        continue;
                     }
                 }
                 apiParamModelNode.getParamModelList().add(parseObjectOrNormal(field, filedTypeName, project));
@@ -265,18 +263,21 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
         if (field != null) {
             //desc 获取
             PsiAnnotation apiModelProperty = field.getAnnotation(AnnotationCons.API_MODEL_PROPERTY);
+            String desc = "";
+            String notes = "";
             if (apiModelProperty != null) {
-                String desc = ParseUtils.getPsiAnnotationValue(apiModelProperty);
-                if (StrUtil.isBlank(desc) && field.getDocComment() != null) {
-                    //注释中获取
-                    desc = field.getDocComment().getText();
-                }
-                String notes = ParseUtils.getPsiAnnotationValueByName(apiModelProperty, "notes");
-                if (desc != null && StrUtil.isNotBlank(notes)) {
-                    desc = desc + "(" + notes + ")";
-                }
+                desc = ParseUtils.getPsiAnnotationValue(apiModelProperty);
+                notes = ParseUtils.getPsiAnnotationValueByName(apiModelProperty, "notes");
                 apiParamModelNode.setDesc(desc);
             }
+            if (StrUtil.isBlank(desc) && field.getDocComment() != null) {
+                //注释中获取
+                desc = ParseUtils.getJavaDoc(field.getDocComment().getText());
+            }
+            if (StrUtil.isNotBlank(notes)) {
+                desc = desc + "(" + notes + ")";
+            }
+            apiParamModelNode.setDesc(desc);
         }
         //默认值,是否必填
         return apiParamModelNode;

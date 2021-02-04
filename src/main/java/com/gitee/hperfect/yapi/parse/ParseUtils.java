@@ -28,6 +28,9 @@ public class ParseUtils {
     }
 
     public static String addWithBackslash(String string) {
+        if (string == null) {
+            return "";
+        }
         if (!string.startsWith("/")) {
             string = "/" + string;
         }

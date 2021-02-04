@@ -44,6 +44,8 @@ public class ApiDto {
      */
     @SerializedName("res_body")
     private String resBody;
+    @SerializedName("req_body_is_json_schema")
+    private boolean reqBodyIsJsonSchema = true;
 
     /**
      * 返回参数是否为json_schema

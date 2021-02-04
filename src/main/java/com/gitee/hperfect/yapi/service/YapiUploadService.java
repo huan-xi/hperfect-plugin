@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpUtil;
+import com.gitee.hperfect.settings.AppSettingsState;
 import com.gitee.hperfect.utils.ClipboardUtils;
 import com.gitee.hperfect.yapi.action.UploadToYapiAction;
 import com.gitee.hperfect.yapi.dto.*;
@@ -11,7 +12,6 @@ import com.gitee.hperfect.yapi.model.ApiCat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gitee.hperfect.utils.YapiTypeUtils;
-import com.gitee.hperfect.yapi.config.YapiConfig;
 import com.gitee.hperfect.yapi.config.Yapis;
 import com.gitee.hperfect.yapi.model.ApiModel;
 import com.gitee.hperfect.yapi.model.ApiParamModelNode;
@@ -31,14 +31,15 @@ import java.util.List;
  */
 public class YapiUploadService {
 
-    private final YapiConfig yapiConfig;
+    private final AppSettingsState settings = AppSettingsState.getInstance();
     private final Gson gson = new Gson();
 
-    public YapiUploadService(YapiConfig yapiConfig) {
-        this.yapiConfig = yapiConfig;
-    }
-
     public void upload(ApiCat apiCat) {
+        if (!settings.validateYapi()) {
+            Notifications.Bus.notify(UploadToYapiAction.NOTIFICATION_GROUP.createNotification("请在 设置->tools->yapi项目配置 中配置相关属性", MessageType.ERROR));
+            return;
+        }
+
         //创建或获取分类
         Integer catId = this.getOrCreateCat(apiCat.getCatName(), apiCat.getCatDesc());
         //上传api
@@ -50,7 +51,7 @@ public class YapiUploadService {
             for (ApiModel api : apis) {
                 ApiDto apiDto = new ApiDto();
                 apiDto.setCatId(catId);
-                apiDto.setToken(yapiConfig.getToken());
+                apiDto.setToken(settings.getYapiToken());
                 apiDto.setMethod(api.getMethod());
                 apiDto.setTitle(api.getName());
                 apiDto.setPath(api.getPath());
@@ -63,11 +64,12 @@ public class YapiUploadService {
                     apiDto.setResBody(gson.toJson(toYapiTypeDto(returnType)));
                 }
                 apiDto.setReqBodyOther(gson.toJson(toYapiTypeDto(api.getBodyParams())));
-                String resp = HttpUtil.post(yapiConfig.getHost() + Yapis.SAVE, gson.toJson(apiDto));
+                String resp = HttpUtil.post(settings.getYapiHost() + Yapis.SAVE, gson.toJson(apiDto));
                 System.out.println(resp);
                 if (YapiResponse.isSuccess(resp)) {
                     success++;
-                    Type type = new TypeToken<YapiResponse<List<SaveApiVo>>>() {}.getType();
+                    Type type = new TypeToken<YapiResponse<List<SaveApiVo>>>() {
+                    }.getType();
                     YapiResponse<List<SaveApiVo>> vos = gson.fromJson(resp, type);
                     if (CollUtil.isNotEmpty(vos.getData())) {
                         lastId = vos.getData().get(0).getId();
@@ -77,9 +79,9 @@ public class YapiUploadService {
         }
         Notifications.Bus.notify(UploadToYapiAction.NOTIFICATION_GROUP.createNotification(String.format("总共解析接口:%d个,成功上传:%d个,api已复制到剪切板", apis.size(), success), MessageType.INFO));
         if (lastId != null) {
-            ClipboardUtils.sendToClipboard(yapiConfig.getHost() + "/project/26/interface/api/" + lastId);
+            ClipboardUtils.sendToClipboard(settings.getYapiHost() + "/project/26/interface/api/" + lastId);
         } else if (catId != null) {
-            ClipboardUtils.sendToClipboard(yapiConfig.getHost() + "/project/26/interface/api/cat_" + catId);
+            ClipboardUtils.sendToClipboard(settings.getYapiHost() + "/project/26/interface/api/cat_" + catId);
         }
     }
 
@@ -149,9 +151,9 @@ public class YapiUploadService {
         //空分类
         if (StrUtil.isNotBlank(catName)) {
             //获取所有分类
-            String resp = HttpUtil.createGet(yapiConfig.getHost() + Yapis.GET_CAT_MENU)
-                    .form("project_id", this.yapiConfig.getProjectId())
-                    .form("token", this.yapiConfig.getToken())
+            String resp = HttpUtil.createGet(settings.getYapiHost() + Yapis.GET_CAT_MENU)
+                    .form("project_id", settings.getYapiProjectId())
+                    .form("token", settings.getYapiToken())
                     .execute()
                     .body();
             Gson gson = new Gson();
@@ -177,10 +179,10 @@ public class YapiUploadService {
     }
 
     public CatDto createCat(String name, String desc) {
-        String resp = HttpUtil.createPost(yapiConfig.getHost() + Yapis.ADD_CAT)
+        String resp = HttpUtil.createPost(settings.getYapiHost() + Yapis.ADD_CAT)
                 .header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded")
-                .form("project_id", this.yapiConfig.getProjectId())
-                .form("token", this.yapiConfig.getToken())
+                .form("project_id", settings.getYapiProjectId())
+                .form("token", settings.getYapiToken())
                 .form("name", name)
                 .form("desc", desc)
                 .execute()
