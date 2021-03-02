@@ -172,12 +172,13 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
             apiParamModelNode = new ApiParamModelNode();
             apiParamModelNode.setType("Object");
         }
+        System.out.printf("查找对象%s\n", genericType.getClassName());
         PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(genericType.getClassName(), GlobalSearchScope.allScope(project));
         if (psiClass != null) {
-            System.out.printf("找到对象开始解析对象%s\n", psiClass.getName());
+            System.out.printf("找到对象,开始解析对象%s\n", psiClass.getName());
             //如果是枚举
             if (psiClass.isEnum()) {
-                System.out.println("开始解析泛型属性");
+                System.out.println("开始解析枚举属性");
                 apiParamModelNode.setType("enum");
                 apiParamModelNode.setDesc(parseEnumDesc(apiParamModelNode.getDesc(), psiClass));
                 return apiParamModelNode;
@@ -187,10 +188,19 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
                 if (field.getModifierList() != null && field.getModifierList().hasModifierProperty("final")) {
                     continue;
                 }
-                System.out.printf("开始解析对象属性:%s,类型:%s\n", field.getName(), field.getType());
-                //是否是基本类型
+
                 String filedTypeName = field.getType().getCanonicalText();
-                //如果是泛型
+                System.out.printf("开始解析对象%s,属性:%s,类型:%s\n", psiClass.getName(), field.getName(), filedTypeName);
+                //是否是基本类型
+                GenericType filedGenericType = GenericType.parse(filedTypeName);
+                if (StrUtil.isNotBlank(filedGenericType.getGenericClass()) && YapiTypeUtils.genericList.contains(filedGenericType.getGenericClass())) {
+                    //替换泛型,多泛型未处理
+                    GenericType filedTypeReplaced = new GenericType(filedGenericType.getClassName(), genericType.getGenericClass());
+                    apiParamModelNode.getParamModelList().add(parseObjectType(filedTypeReplaced, project, apiParamModelNode));
+                    //该字段解析完成
+                    continue;
+                }
+                //如果是(当前类)泛型
                 String genericClass = genericType.getGenericClass();
                 if (YapiTypeUtils.genericList.contains(filedTypeName)) {
                     if (StrUtil.isBlank(genericClass) || "?".equals(genericClass)) {
@@ -208,6 +218,9 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
                 }
                 apiParamModelNode.getParamModelList().add(parseObjectOrNormal(field, filedTypeName, project));
             }
+            //对象是数组
+        } else {
+            System.out.printf("未找到class:%s\n", genericType.getClassName());
         }
         return apiParamModelNode;
     }
@@ -242,6 +255,9 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
     //todo 待完善
     private boolean isArrayType(String filedTypeName) {
         if (filedTypeName.contains("java.util.List")) {
+            return true;
+        }
+        if (filedTypeName.contains("java.lang.Iterable")) {
             return true;
         }
         return false;

@@ -17,6 +17,13 @@ public class GenericType {
     private String className;
     private String genericClass;
 
+    public GenericType(String className, String genericClass) {
+        this.className = className;
+        this.genericClass = genericClass;
+    }
+    public GenericType() {
+
+    }
     public static GenericType parse(String str) {
         GenericType genericType = new GenericType();
         if (str.contains("<")) {

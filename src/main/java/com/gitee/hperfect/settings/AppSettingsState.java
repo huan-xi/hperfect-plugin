@@ -3,10 +3,8 @@
 package com.gitee.hperfect.settings;
 
 import cn.hutool.core.util.StrUtil;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.*;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,15 +18,15 @@ import org.jetbrains.annotations.Nullable;
  */
 @Getter
 @Setter
-@State(name = "org.intellij.sdk.settings.AppSettingsState", storages = {@Storage("api-parser.xml")})
+@State(name = "org.intellij.sdk.settings.AppSettingsState", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
 
     private String yapiToken;
     private String yapiProjectId;
     private String yapiHost;
 
-    public static AppSettingsState getInstance() {
-        return ServiceManager.getService(AppSettingsState.class);
+    public static AppSettingsState getInstance(Project project) {
+        return ServiceManager.getService(project,AppSettingsState.class);
     }
 
     @Nullable

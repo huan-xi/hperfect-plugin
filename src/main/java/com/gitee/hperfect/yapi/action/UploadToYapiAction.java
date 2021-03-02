@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
  * @date 2021/1/21 6:02 下午
  */
 public class UploadToYapiAction extends AnAction {
-    YapiUploadService uploadService = new YapiUploadService();
+
     public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("h-api-uploader", NotificationDisplayType.STICKY_BALLOON, true);
 
 
@@ -36,6 +36,7 @@ public class UploadToYapiAction extends AnAction {
         if (psiFile == null) {
             return;
         }
+        YapiUploadService uploadService = new YapiUploadService(project);
         PsiElement referenceAt = psiFile.findElementAt(editor.getCaretModel().getOffset());
         PsiClass selectedClass = (PsiClass) PsiTreeUtil.getContextOfType(referenceAt, new Class[]{PsiClass.class});
         PsiMethod selectedMethod = (PsiMethod) PsiTreeUtil.getContextOfType(referenceAt, new Class[]{PsiMethod.class});
@@ -45,7 +46,7 @@ public class UploadToYapiAction extends AnAction {
             ApiCat cat = apiCatParser.parse(selectedClass, project, selectedMethod);
             System.out.println(new Gson().toJson(cat));
             //上传到yapi
-            this.uploadService.upload(cat);
+            uploadService.upload(cat);
         }
     }
 }

@@ -16,6 +16,7 @@ import com.gitee.hperfect.yapi.config.Yapis;
 import com.gitee.hperfect.yapi.model.ApiModel;
 import com.gitee.hperfect.yapi.model.ApiParamModelNode;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 
 import java.lang.reflect.Type;
@@ -31,7 +32,11 @@ import java.util.List;
  */
 public class YapiUploadService {
 
-    private final AppSettingsState settings = AppSettingsState.getInstance();
+    private final AppSettingsState settings ;
+
+    public YapiUploadService(Project project){
+        this.settings = AppSettingsState.getInstance(project);
+    }
     private final Gson gson = new Gson();
 
     public void upload(ApiCat apiCat) {

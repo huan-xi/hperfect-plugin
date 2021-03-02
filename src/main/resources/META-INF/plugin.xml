@@ -39,9 +39,10 @@
         </action>-->
     </actions>
     <extensions defaultExtensionNs="com.intellij">
-        <applicationConfigurable parentId="tools" instance="com.gitee.hperfect.settings.AppSettingsConfigurable"
+        <projectConfigurable parentId="tools" instance="com.gitee.hperfect.settings.AppSettingsConfigurable"
                                  id="org.intellij.sdk.settings.AppSettingsConfigurable"
                                  displayName="yapi项目配置"/>
-        <applicationService serviceImplementation="com.gitee.hperfect.settings.AppSettingsState"/>
+
+        <projectService serviceImplementation="com.gitee.hperfect.settings.AppSettingsState"/>
     </extensions>
 </idea-plugin>

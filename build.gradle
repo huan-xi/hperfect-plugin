@@ -19,7 +19,7 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version 'LATEST-EAP-SNAPSHOT'
+    version '2020.3.1'
     pluginName 'yapi-parser'
     updateSinceUntilBuild false
     sameSinceUntilBuild false

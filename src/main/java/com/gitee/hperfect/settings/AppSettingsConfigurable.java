@@ -3,7 +3,10 @@
 package com.gitee.hperfect.settings;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -14,9 +17,11 @@ import javax.swing.*;
 public class AppSettingsConfigurable implements Configurable {
 
     private AppSettingsComponent mySettingsComponent;
+    AppSettingsState settings;
 
-    // A default constructor with no arguments is required because this implementation
-    // is registered as an applicationConfigurable EP
+    public AppSettingsConfigurable(Project project) {
+        settings = project.getService(AppSettingsState.class);
+    }
 
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
@@ -34,7 +39,6 @@ public class AppSettingsConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        AppSettingsState settings = AppSettingsState.getInstance();
         boolean modified = !mySettingsComponent.getYapiHostText().getText().equals(settings.getYapiHost());
         modified |= !mySettingsComponent.getYapiTokenText().getText().equals(settings.getYapiToken());
         modified |= !mySettingsComponent.getYapiProjectIdText().getText().equals(settings.getYapiProjectId());
@@ -43,7 +47,6 @@ public class AppSettingsConfigurable implements Configurable {
 
     @Override
     public void apply() {
-        AppSettingsState settings = AppSettingsState.getInstance();
         settings.setYapiHost(mySettingsComponent.getYapiHostText().getText());
         settings.setYapiToken(mySettingsComponent.getYapiTokenText().getText());
         settings.setYapiProjectId(mySettingsComponent.getYapiProjectIdText().getText());
@@ -51,7 +54,6 @@ public class AppSettingsConfigurable implements Configurable {
 
     @Override
     public void reset() {
-        AppSettingsState settings = AppSettingsState.getInstance();
         mySettingsComponent.getYapiProjectIdText().setText(settings.getYapiProjectId());
         mySettingsComponent.getYapiTokenText().setText(settings.getYapiToken());
         mySettingsComponent.getYapiHostText().setText(settings.getYapiHost());
