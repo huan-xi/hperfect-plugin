@@ -4,9 +4,7 @@ package com.gitee.hperfect.settings;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -42,6 +40,8 @@ public class AppSettingsConfigurable implements Configurable {
         boolean modified = !mySettingsComponent.getYapiHostText().getText().equals(settings.getYapiHost());
         modified |= !mySettingsComponent.getYapiTokenText().getText().equals(settings.getYapiToken());
         modified |= !mySettingsComponent.getYapiProjectIdText().getText().equals(settings.getYapiProjectId());
+        modified |= !mySettingsComponent.getExcludeFieldText().getText().equals(settings.getExcludeFields());
+
         return modified;
     }
 
@@ -50,6 +50,7 @@ public class AppSettingsConfigurable implements Configurable {
         settings.setYapiHost(mySettingsComponent.getYapiHostText().getText());
         settings.setYapiToken(mySettingsComponent.getYapiTokenText().getText());
         settings.setYapiProjectId(mySettingsComponent.getYapiProjectIdText().getText());
+        settings.setExcludeFields(mySettingsComponent.getExcludeFieldText().getText());
     }
 
     @Override
@@ -57,6 +58,7 @@ public class AppSettingsConfigurable implements Configurable {
         mySettingsComponent.getYapiProjectIdText().setText(settings.getYapiProjectId());
         mySettingsComponent.getYapiTokenText().setText(settings.getYapiToken());
         mySettingsComponent.getYapiHostText().setText(settings.getYapiHost());
+        mySettingsComponent.getExcludeFieldText().setText(settings.getExcludeFields());
     }
 
 

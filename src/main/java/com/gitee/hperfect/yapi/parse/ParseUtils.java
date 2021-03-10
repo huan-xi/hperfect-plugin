@@ -47,7 +47,13 @@ public class ParseUtils {
         return mapper.endsWith("Mapping");
     }
 
-
+    /**
+     * 获取注解的值
+     *
+     * @param annotation
+     * @param name
+     * @return
+     */
     public static String getPsiAnnotationValueByName(PsiAnnotation annotation, String name) {
         String value = null;
         PsiNameValuePair[] attributes = annotation.getParameterList().getAttributes();
@@ -64,6 +70,12 @@ public class ParseUtils {
         return getPsiAnnotationValueByName(annotation, null);
     }
 
+    /**
+     * 获取 /** -> @a 部分
+     *
+     * @param comment
+     * @return
+     */
     public static String getJavaDoc(String comment) {
         StringBuilder builder = new StringBuilder();
         for (char c : comment.toCharArray()) {
@@ -77,6 +89,13 @@ public class ParseUtils {
         return builder.toString().trim();
     }
 
+    /**
+     * 获取参数详情
+     *
+     * @param psiMethodTarget
+     * @param paramName
+     * @return
+     */
     public static String getParamDesc(PsiMethod psiMethodTarget, String paramName) {
         if (psiMethodTarget.getDocComment() != null) {
             PsiDocTag[] psiDocTags = psiMethodTarget.getDocComment().getTags();
@@ -115,12 +134,39 @@ public class ParseUtils {
         return source;
     }
 
+    /**
+     * 获取完整文档
+     *
+     * @param docComment
+     * @return
+     */
     public static String getJavaDoc(PsiDocComment docComment) {
         if (docComment != null) {
             return getJavaDoc(docComment.getText());
         }
         return null;
     }
+
+    /**
+     * 获取指定tag的值
+     * @param docComment
+     * @param tagName
+     * @return
+     */
+    public static String getJavaDocTagValue(PsiDocComment docComment, String tagName) {
+        if (docComment != null) {
+            PsiDocTag[] tags = docComment.getTags();
+            if (tags.length > 0) {
+                for (PsiDocTag tag : tags) {
+                    if (tag.getName().equals(tag.getName())) {
+                        return tag.getText();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 
     public static String removePackage(String typeName) {
         if (StrUtil.isNotBlank(typeName) && typeName.contains(".")) {

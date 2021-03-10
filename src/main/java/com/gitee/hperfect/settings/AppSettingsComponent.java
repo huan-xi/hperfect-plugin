@@ -23,10 +23,13 @@ public class AppSettingsComponent {
     private final EditorTextField yapiHostText;
     private final EditorTextField yapiTokenText;
     private final EditorTextField yapiProjectIdText;
+    private final EditorTextField excludeFieldText;
 
     public AppSettingsComponent() {
         yapiHostText = new EditorTextField();
+        excludeFieldText = new EditorTextField();
         yapiHostText.setPlaceholder("http://doc.domain.com");
+        excludeFieldText.setPlaceholder("以逗号连接");
         yapiTokenText = new EditorTextField();
         yapiProjectIdText = new EditorTextField();
 
@@ -34,6 +37,7 @@ public class AppSettingsComponent {
                 .addLabeledComponent(new JBLabel("yapi host:"), yapiHostText, 1, false)
                 .addLabeledComponent(new JBLabel("yapi token:"), yapiTokenText, 1, false)
                 .addLabeledComponent(new JBLabel("yapi project id:"), yapiProjectIdText, 1, false)
+                .addLabeledComponent(new JBLabel("全局排除字段(逗号连接):"), excludeFieldText, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }

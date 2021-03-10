@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * Supports storing the application settings in a persistent way.
  * The {@link State} and {@link Storage} annotations define the name of the data and the file name where
  * these persistent application settings are stored.
+ * @author huanxi
  */
 @Getter
 @Setter
@@ -24,9 +25,10 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
     private String yapiToken;
     private String yapiProjectId;
     private String yapiHost;
+    private String excludeFields;
 
     public static AppSettingsState getInstance(Project project) {
-        return ServiceManager.getService(project,AppSettingsState.class);
+        return ServiceManager.getService(project, AppSettingsState.class);
     }
 
     @Nullable

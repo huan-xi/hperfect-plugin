@@ -2,6 +2,7 @@ package com.gitee.hperfect.yapi.parse.parser.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.gitee.hperfect.settings.AppSettingsState;
 import com.gitee.hperfect.utils.YapiTypeUtils;
 import com.gitee.hperfect.yapi.config.AnnotationCons;
 import com.gitee.hperfect.yapi.model.ApiParamModelNode;
@@ -14,6 +15,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.GlobalSearchScope;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -183,12 +185,43 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
                 apiParamModelNode.setDesc(parseEnumDesc(apiParamModelNode.getDesc(), psiClass));
                 return apiParamModelNode;
             }
+            //获取排除属性
+            List<String> excludeFieldList = new ArrayList<>();
+            List<String> pointList = new ArrayList<>();
+
+            //配置排除
+            AppSettingsState instance = AppSettingsState.getInstance(project);
+            String excludeFields = instance.getExcludeFields();
+            if (StrUtil.isNotBlank(excludeFields)) {
+                excludeFieldList.addAll(StrUtil.split(excludeFields, ','));
+            }
+            //模型注解排除
+            String apiParam = ParseUtils.getJavaDocTagValue(psiClass.getDocComment(), "apiParam");
+            if (StrUtil.isNotBlank(apiParam)) {
+                if (apiParam.startsWith("!")) {
+                    excludeFieldList.addAll(StrUtil.split(apiParam, ','));
+                } else {
+                    pointList.addAll(StrUtil.split(apiParam.substring(1), '1'));
+                }
+            }
+
             //解析字段类型
             for (PsiField field : psiClass.getAllFields()) {
                 if (field.getModifierList() != null && field.getModifierList().hasModifierProperty("final")) {
                     continue;
                 }
+                if (CollUtil.isNotEmpty(pointList)) {
+                    //指定优先
+                    if (!pointList.contains(field.getName())) {
+                        continue;
+                    }
+                } else if (CollUtil.isNotEmpty(excludeFieldList)){
+                    //排除
+                    if (excludeFieldList.contains(field.getName())) {
+                        continue;
+                    }
 
+                }
                 String filedTypeName = field.getType().getCanonicalText();
                 System.out.printf("开始解析对象%s,属性:%s,类型:%s\n", psiClass.getName(), field.getName(), filedTypeName);
                 //是否是基本类型

@@ -32,11 +32,12 @@ import java.util.List;
  */
 public class YapiUploadService {
 
-    private final AppSettingsState settings ;
+    private final AppSettingsState settings;
 
-    public YapiUploadService(Project project){
+    public YapiUploadService(Project project) {
         this.settings = AppSettingsState.getInstance(project);
     }
+
     private final Gson gson = new Gson();
 
     public void upload(ApiCat apiCat) {
@@ -84,9 +85,9 @@ public class YapiUploadService {
         }
         Notifications.Bus.notify(UploadToYapiAction.NOTIFICATION_GROUP.createNotification(String.format("总共解析接口:%d个,成功上传:%d个,api已复制到剪切板", apis.size(), success), MessageType.INFO));
         if (lastId != null) {
-            ClipboardUtils.sendToClipboard(settings.getYapiHost() + "/project/26/interface/api/" + lastId);
+            ClipboardUtils.sendToClipboard(String.format("%s/project/%s/interface/api/%s", settings.getYapiHost(), settings.getYapiProjectId(), lastId));
         } else if (catId != null) {
-            ClipboardUtils.sendToClipboard(settings.getYapiHost() + "/project/26/interface/api/cat_" + catId);
+            ClipboardUtils.sendToClipboard(String.format("%s/project/%s/interface/api/cat_%s", settings.getYapiHost(), settings.getYapiProjectId(), catId));
         }
     }
 
