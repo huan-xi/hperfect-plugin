@@ -258,6 +258,13 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
         return apiParamModelNode;
     }
 
+    /**
+     * 解析对象或基本类型
+     * @param field
+     * @param filedTypeName
+     * @param project
+     * @return
+     */
     public ApiParamModelNode parseObjectOrNormal(PsiField field, String filedTypeName, Project project) {
         ApiParamModelNode apiParamModelNode = parseModelNormalType(field, filedTypeName);
         if (YapiTypeUtils.isNormalType(filedTypeName)) {

@@ -158,7 +158,7 @@ public class ParseUtils {
             PsiDocTag[] tags = docComment.getTags();
             if (tags.length > 0) {
                 for (PsiDocTag tag : tags) {
-                    if (tag.getName().equals(tag.getName())) {
+                    if (tag.getName().equals(tagName)) {
                         return tag.getText();
                     }
                 }
