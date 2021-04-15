@@ -32,7 +32,7 @@ public interface ApiModelParamParser {
     ApiParamModelNode parseMethodFiled(PsiParameter psiParameter, PsiMethod method, Project project);
 
     /**
-     * 从类属性上解析字段
+     * 从类(对象类型)属性上解析字段
      *
      * @param genericType
      * @param project

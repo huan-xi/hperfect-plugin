@@ -140,9 +140,7 @@ public class DefaultApiModelParser implements ApiModelParser {
                 if (requestBody != null) {
                     continue;
                 }
-
                 ApiParamModelNode apiParamModel = this.apiModelPropertyParser.parseMethodFiled(psiParameter, method, project);
-
                 if (apiParamModel != null) {
                     params.add(apiParamModel);
                 }
