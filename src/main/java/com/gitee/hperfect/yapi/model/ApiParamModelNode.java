@@ -25,11 +25,17 @@ public class ApiParamModelNode {
     private String type;
 
     private List<ApiParamModelNode> paramModelList = new ArrayList<>();
-
+    /**
+     * 详情
+     */
     private String desc;
-
+    /**
+     * 是否未必须值
+     */
     private boolean required;
-
+    /**
+     * 默认值
+     */
     private Object defaultValue;
 
     /**

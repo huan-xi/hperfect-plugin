@@ -1,5 +1,6 @@
 package com.gitee.hperfect.yapi.action;
 
+import com.gitee.hperfect.utils.MessageUtils;
 import com.gitee.hperfect.yapi.model.ApiCat;
 import com.gitee.hperfect.yapi.parse.parser.impl.DefaultApiCatParser;
 import com.gitee.hperfect.yapi.parse.parser.ApiCatParser;
@@ -11,6 +12,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +23,6 @@ import org.jetbrains.annotations.NotNull;
  * @date 2021/1/21 6:02 下午
  */
 public class UploadToYapiAction extends AnAction {
-
-    public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("h-api-uploader", NotificationDisplayType.STICKY_BALLOON, true);
 
 
     @Override
@@ -46,7 +46,11 @@ public class UploadToYapiAction extends AnAction {
             ApiCat cat = apiCatParser.parse(selectedClass, project, selectedMethod);
             System.out.println(new Gson().toJson(cat));
             //上传到yapi
-            uploadService.upload(cat);
+            try {
+                uploadService.upload(cat);
+            } catch (Throwable throwable) {
+                MessageUtils.error("上传发生错误:" + throwable.getMessage());
+            }
         }
     }
 }

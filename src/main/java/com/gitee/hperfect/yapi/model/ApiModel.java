@@ -21,8 +21,14 @@ public class ApiModel {
     private ApiParamModelNode bodyParams;
 
     private String method;
-
+    /**
+     * 描述
+     */
     private String desc;
+    /**
+     * 注释
+     */
+    private String comment;
 
     private ApiParamModelNode returnType;
 }

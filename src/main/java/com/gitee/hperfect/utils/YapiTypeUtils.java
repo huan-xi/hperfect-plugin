@@ -1,5 +1,6 @@
 package com.gitee.hperfect.utils;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gitee.hperfect.yapi.parse.ParseUtils;
 import com.google.gson.JsonObject;
@@ -21,18 +22,18 @@ public class YapiTypeUtils {
     @NonNls
     public static final Map<String, Object> NORMAL_TYPES = new HashMap<>();
 
-    public static final Map<String, Object> normalTypesPackages = new HashMap<>();
+    public static final Map<String, Object> NORMAL_TYPES_PACKAGES = new HashMap<>();
 
-    public static final Map<String, Object> collectTypes = new HashMap<>();
+    public static final Map<String, Object> COLLECT_TYPES = new HashMap<>();
 
-    public static final Map<String, Object> collectTypesPackages = new HashMap<>();
+    public static final Map<String, Object> COLLECT_TYPES_Packages = new HashMap<>();
 
-    public static final Map<String, String> java2JsonTypes = new HashMap<>();
+    public static final Map<String, String> JAVA2_JSON_TYPES = new HashMap<>();
     /**
      * 泛型列表
      */
-    public static final List<String> genericList = new ArrayList<>();
-
+    public static final List<String> GENERIC_LIST = new ArrayList<>();
+    public static final List<String> ARRAY_TYPE_LIST = ListUtil.toList("java.util.List", "java.lang.Iterable", "java.util.ArrayList");
 
     static {
         NORMAL_TYPES.put("int", 1);
@@ -58,69 +59,69 @@ public class YapiTypeUtils {
         NORMAL_TYPES.put("LocalDateTime", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
         NORMAL_TYPES.put("Timestamp", new Timestamp(System.currentTimeMillis()));
         NORMAL_TYPES.put("Object", null);
-        collectTypes.put("HashMap", "HashMap");
-        collectTypes.put("Map", "Map");
+        COLLECT_TYPES.put("HashMap", "HashMap");
+        COLLECT_TYPES.put("Map", "Map");
 
-        collectTypes.put("LinkedHashMap", "LinkedHashMap");
+        COLLECT_TYPES.put("LinkedHashMap", "LinkedHashMap");
 
-        genericList.add("T");
-        genericList.add("E");
-        genericList.add("A");
-        genericList.add("B");
-        genericList.add("K");
-        genericList.add("V");
+        GENERIC_LIST.add("T");
+        GENERIC_LIST.add("E");
+        GENERIC_LIST.add("A");
+        GENERIC_LIST.add("B");
+        GENERIC_LIST.add("K");
+        GENERIC_LIST.add("V");
 
-        java2JsonTypes.put("int", "number");
-        java2JsonTypes.put("byte", "number");
-        java2JsonTypes.put("short", "number");
-        java2JsonTypes.put("long", "number");
-        java2JsonTypes.put("float", "number");
-        java2JsonTypes.put("double", "number");
-        java2JsonTypes.put("Byte", "number");
-        java2JsonTypes.put("Short", "number");
-        java2JsonTypes.put("Integer", "number");
-        java2JsonTypes.put("Long", "number");
-        java2JsonTypes.put("Float", "number");
-        java2JsonTypes.put("Double", "number");
-        java2JsonTypes.put("BigDecimal", "number");
-        java2JsonTypes.put("Timestamp", "number");
-        java2JsonTypes.put("char", "string");
-        java2JsonTypes.put("String", "string");
-        java2JsonTypes.put("Date", "string");
-        java2JsonTypes.put("LocalDate", "string");
-        java2JsonTypes.put("LocalDateTime", "string");
-        java2JsonTypes.put("Boolean", "boolean");
-        java2JsonTypes.put("array", "array");
-        java2JsonTypes.put("enum", "string");
+        JAVA2_JSON_TYPES.put("int", "number");
+        JAVA2_JSON_TYPES.put("byte", "number");
+        JAVA2_JSON_TYPES.put("short", "number");
+        JAVA2_JSON_TYPES.put("long", "number");
+        JAVA2_JSON_TYPES.put("float", "number");
+        JAVA2_JSON_TYPES.put("double", "number");
+        JAVA2_JSON_TYPES.put("Byte", "number");
+        JAVA2_JSON_TYPES.put("Short", "number");
+        JAVA2_JSON_TYPES.put("Integer", "number");
+        JAVA2_JSON_TYPES.put("Long", "number");
+        JAVA2_JSON_TYPES.put("Float", "number");
+        JAVA2_JSON_TYPES.put("Double", "number");
+        JAVA2_JSON_TYPES.put("BigDecimal", "number");
+        JAVA2_JSON_TYPES.put("Timestamp", "number");
+        JAVA2_JSON_TYPES.put("char", "string");
+        JAVA2_JSON_TYPES.put("String", "string");
+        JAVA2_JSON_TYPES.put("Date", "string");
+        JAVA2_JSON_TYPES.put("LocalDate", "string");
+        JAVA2_JSON_TYPES.put("LocalDateTime", "string");
+        JAVA2_JSON_TYPES.put("Boolean", "boolean");
+        JAVA2_JSON_TYPES.put("array", "array");
+        JAVA2_JSON_TYPES.put("enum", "string");
     }
 
     static {
-        normalTypesPackages.put("int", 1);
-        normalTypesPackages.put("boolean", true);
-        normalTypesPackages.put("byte", 1);
-        normalTypesPackages.put("short", 1);
-        normalTypesPackages.put("long", 1L);
-        normalTypesPackages.put("float", 1.0F);
-        normalTypesPackages.put("double", 1.0D);
-        normalTypesPackages.put("char", 'a');
-        normalTypesPackages.put("java.lang.Boolean", false);
-        normalTypesPackages.put("java.lang.Byte", 0);
-        normalTypesPackages.put("java.lang.Short", (short) 0);
-        normalTypesPackages.put("java.lang.Integer", 1);
-        normalTypesPackages.put("java.lang.Long", 1L);
-        normalTypesPackages.put("java.lang.Float", 1L);
-        normalTypesPackages.put("java.lang.Double", 1.0D);
-        normalTypesPackages.put("java.sql.Timestamp", new Timestamp(System.currentTimeMillis()));
-        normalTypesPackages.put("java.util.Date", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
-        normalTypesPackages.put("java.lang.String", "String");
-        normalTypesPackages.put("java.math.BigDecimal", 1);
-        normalTypesPackages.put("java.time.LocalDate", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
-        normalTypesPackages.put("java.time.LocalTime", new SimpleDateFormat("HH:mm:ss").format(new Date()));
-        normalTypesPackages.put("java.time.LocalDateTime", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
+        NORMAL_TYPES_PACKAGES.put("int", 1);
+        NORMAL_TYPES_PACKAGES.put("boolean", true);
+        NORMAL_TYPES_PACKAGES.put("byte", 1);
+        NORMAL_TYPES_PACKAGES.put("short", 1);
+        NORMAL_TYPES_PACKAGES.put("long", 1L);
+        NORMAL_TYPES_PACKAGES.put("float", 1.0F);
+        NORMAL_TYPES_PACKAGES.put("double", 1.0D);
+        NORMAL_TYPES_PACKAGES.put("char", 'a');
+        NORMAL_TYPES_PACKAGES.put("java.lang.Boolean", false);
+        NORMAL_TYPES_PACKAGES.put("java.lang.Byte", 0);
+        NORMAL_TYPES_PACKAGES.put("java.lang.Short", (short) 0);
+        NORMAL_TYPES_PACKAGES.put("java.lang.Integer", 1);
+        NORMAL_TYPES_PACKAGES.put("java.lang.Long", 1L);
+        NORMAL_TYPES_PACKAGES.put("java.lang.Float", 1L);
+        NORMAL_TYPES_PACKAGES.put("java.lang.Double", 1.0D);
+        NORMAL_TYPES_PACKAGES.put("java.sql.Timestamp", new Timestamp(System.currentTimeMillis()));
+        NORMAL_TYPES_PACKAGES.put("java.util.Date", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
+        NORMAL_TYPES_PACKAGES.put("java.lang.String", "String");
+        NORMAL_TYPES_PACKAGES.put("java.math.BigDecimal", 1);
+        NORMAL_TYPES_PACKAGES.put("java.time.LocalDate", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
+        NORMAL_TYPES_PACKAGES.put("java.time.LocalTime", new SimpleDateFormat("HH:mm:ss").format(new Date()));
+        NORMAL_TYPES_PACKAGES.put("java.time.LocalDateTime", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
 
-        collectTypesPackages.put("java.util.LinkedHashMap", "LinkedHashMap");
-        collectTypesPackages.put("java.util.HashMap", "HashMap");
-        collectTypesPackages.put("java.util.Map", "Map");
+        COLLECT_TYPES_Packages.put("java.util.LinkedHashMap", "LinkedHashMap");
+        COLLECT_TYPES_Packages.put("java.util.HashMap", "HashMap");
+        COLLECT_TYPES_Packages.put("java.util.Map", "Map");
     }
 
 
@@ -231,11 +232,20 @@ public class YapiTypeUtils {
                 List<String> split = StrUtil.split(type, '.');
                 type = split.get(split.size() - 1);
             }
-            if (java2JsonTypes.containsKey(type)) {
-                return java2JsonTypes.get(type);
+            if (JAVA2_JSON_TYPES.containsKey(type)) {
+                return JAVA2_JSON_TYPES.get(type);
             }
         }
 
         return "object";
+    }
+
+    public static boolean isArrayType(String className) {
+        for (String typeName : ARRAY_TYPE_LIST) {
+            if (typeName.contains(className)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

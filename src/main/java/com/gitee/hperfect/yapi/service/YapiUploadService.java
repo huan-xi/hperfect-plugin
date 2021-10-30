@@ -6,6 +6,7 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpUtil;
 import com.gitee.hperfect.settings.AppSettingsState;
 import com.gitee.hperfect.utils.ClipboardUtils;
+import com.gitee.hperfect.utils.MessageUtils;
 import com.gitee.hperfect.yapi.action.UploadToYapiAction;
 import com.gitee.hperfect.yapi.dto.*;
 import com.gitee.hperfect.yapi.model.ApiCat;
@@ -42,7 +43,7 @@ public class YapiUploadService {
 
     public void upload(ApiCat apiCat) {
         if (!settings.validateYapi()) {
-            Notifications.Bus.notify(UploadToYapiAction.NOTIFICATION_GROUP.createNotification("请在 设置->tools->yapi项目配置 中配置相关属性", MessageType.ERROR));
+            MessageUtils.error("请在 设置->tools->yapi项目配置 中配置相关属性");
             return;
         }
 
@@ -61,7 +62,7 @@ public class YapiUploadService {
                 apiDto.setMethod(api.getMethod());
                 apiDto.setTitle(api.getName());
                 apiDto.setPath(api.getPath());
-                apiDto.setDesc(api.getMethod());
+                apiDto.setDesc(api.getDesc());
                 //query参数
                 List<ApiParamModelNode> formParams = api.getFormParams();
                 apiDto.setReqQuery(toApiParamDtos(formParams));
@@ -71,7 +72,6 @@ public class YapiUploadService {
                 }
                 apiDto.setReqBodyOther(gson.toJson(toYapiTypeDto(api.getBodyParams())));
                 String resp = HttpUtil.post(settings.getYapiHost() + Yapis.SAVE, gson.toJson(apiDto));
-                System.out.println(resp);
                 if (YapiResponse.isSuccess(resp)) {
                     success++;
                     Type type = new TypeToken<YapiResponse<List<SaveApiVo>>>() {
@@ -83,7 +83,11 @@ public class YapiUploadService {
                 }
             }
         }
-        Notifications.Bus.notify(UploadToYapiAction.NOTIFICATION_GROUP.createNotification(String.format("总共解析接口:%d个,成功上传:%d个,api已复制到剪切板", apis.size(), success), MessageType.INFO));
+        if (apis.size() == 1 && lastId == null) {
+            upload(apiCat);
+            return;
+        }
+        MessageUtils.info(String.format("总共解析接口:%d个,成功上传:%d个,api已复制到剪切板", apis.size(), success));
         if (lastId != null) {
             ClipboardUtils.sendToClipboard(String.format("%s/project/%s/interface/api/%s", settings.getYapiHost(), settings.getYapiProjectId(), lastId));
         } else if (catId != null) {
@@ -170,7 +174,7 @@ public class YapiUploadService {
             if (any.isPresent()) {
                 CatDto catDto = any.get();
                 if (StrUtil.isNotBlank(catDesc) && !catDesc.equals(catDto.getDesc())) {
-                    //更新
+                    //todo 更新
                 }
                 return catDto.getId();
             } else {

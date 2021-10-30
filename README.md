@@ -1,3 +1,11 @@
+## 待修复
+   1. 对象参数Map<string,Object> 无法解析
+   2. 生成js函数
+
+## 计划功能
+   1. api备注
+   2. api默认值
+
 ## 描述
 
 解析springmvc接口到yapi文档,支持swagger(优先)和注释结合
