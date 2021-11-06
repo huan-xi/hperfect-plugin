@@ -1,6 +1,7 @@
 package com.gitee.hperfect.yapi.parse.parser.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.gitee.hperfect.utils.MessageUtils;
 import com.gitee.hperfect.yapi.config.AnnotationCons;
 import com.gitee.hperfect.yapi.model.ApiCat;
 import com.gitee.hperfect.yapi.parse.ParseUtils;
@@ -47,6 +48,7 @@ public class DefaultApiCatParser implements ApiCatParser {
         }
         String catRoute = this.parseCatRoute(psiClass);
         if (catRoute == null) {
+            MessageUtils.error("没有解析到路由");
             //没有解析到路由
             return null;
         }

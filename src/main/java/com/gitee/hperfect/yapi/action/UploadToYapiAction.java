@@ -44,7 +44,6 @@ public class UploadToYapiAction extends AnAction {
             //解析api
             ApiCatParser apiCatParser =new DefaultApiCatParser();
             ApiCat cat = apiCatParser.parse(selectedClass, project, selectedMethod);
-            System.out.println(new Gson().toJson(cat));
             //上传到yapi
             try {
                 uploadService.upload(cat);
