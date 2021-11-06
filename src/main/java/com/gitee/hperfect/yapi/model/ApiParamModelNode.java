@@ -20,6 +20,7 @@ public class ApiParamModelNode {
     private String name;
 
     /**
+     * Object
      * 参数类型(最终为string)
      */
     private String type;

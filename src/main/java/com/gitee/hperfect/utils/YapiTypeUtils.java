@@ -34,6 +34,7 @@ public class YapiTypeUtils {
      */
     public static final List<String> GENERIC_LIST = new ArrayList<>();
     public static final List<String> ARRAY_TYPE_LIST = ListUtil.toList("java.util.List", "java.lang.Iterable", "java.util.ArrayList");
+    public static final List<String> MAP_TYPE_LIST = ListUtil.toList("java.util.Map");
 
     static {
         NORMAL_TYPES.put("int", 1);
@@ -52,6 +53,9 @@ public class YapiTypeUtils {
         NORMAL_TYPES.put("Float", 0.0F);
         NORMAL_TYPES.put("Double", 0.0D);
         NORMAL_TYPES.put("String", "String");
+        NORMAL_TYPES.put("Map", null);
+
+
         NORMAL_TYPES.put("Date", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
         NORMAL_TYPES.put("BigDecimal", 0.111111);
         NORMAL_TYPES.put("LocalDate", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
@@ -242,6 +246,15 @@ public class YapiTypeUtils {
 
     public static boolean isArrayType(String className) {
         for (String typeName : ARRAY_TYPE_LIST) {
+            if (typeName.contains(className)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isMapType(String className) {
+        for (String typeName : MAP_TYPE_LIST) {
             if (typeName.contains(className)) {
                 return true;
             }
