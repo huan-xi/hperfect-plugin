@@ -56,6 +56,7 @@ public class YapiTypeUtils {
         NORMAL_TYPES.put("Map", null);
 
 
+
         NORMAL_TYPES.put("Date", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
         NORMAL_TYPES.put("BigDecimal", 0.111111);
         NORMAL_TYPES.put("LocalDate", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));

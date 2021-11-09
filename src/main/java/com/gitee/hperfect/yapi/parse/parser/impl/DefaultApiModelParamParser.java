@@ -331,7 +331,7 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
             //未知泛型处理
             genericType.setClassName("java.lang.Object");
         }
-        paramModelNode.setParamModelList(CollUtil.toList(parseObjectOrNormal(field, genericType, project)));
+        paramModelNode.setParamModelList(CollUtil.toList(parseObjectOrNormal(field, GenericType.parse(genericClass), project)));
         return paramModelNode;
     }
 

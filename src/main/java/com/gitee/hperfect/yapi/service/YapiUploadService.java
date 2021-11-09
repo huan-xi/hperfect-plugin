@@ -63,6 +63,7 @@ public class YapiUploadService {
                 apiDto.setTitle(api.getName());
                 apiDto.setPath(api.getPath());
                 apiDto.setDesc(api.getDesc());
+
                 //query参数
                 List<ApiParamModelNode> formParams = api.getFormParams();
                 apiDto.setReqQuery(toApiParamDtos(formParams));
