@@ -1,6 +1,5 @@
 package com.gitee.hperfect.utils;
 
-import com.gitee.hperfect.yapi.action.UploadToYapiAction;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.Notifications;

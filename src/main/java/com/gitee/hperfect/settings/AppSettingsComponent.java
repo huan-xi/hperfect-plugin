@@ -11,7 +11,7 @@ import lombok.Setter;
 import javax.swing.*;
 
 /**
- * Supports creating and managing a {@link JPanel} for the Settings Dialog.
+ * 设置面板
  *
  * @author huanxi
  */
@@ -34,9 +34,9 @@ public class AppSettingsComponent {
         yapiProjectIdText = new EditorTextField();
 
         myMainPanel = FormBuilder.createFormBuilder()
-                .addLabeledComponent(new JBLabel("yapi host:"), yapiHostText, 1, false)
+                .addLabeledComponent(new JBLabel("yapi地址(不要加/结尾):"), yapiHostText, 1, false)
                 .addLabeledComponent(new JBLabel("yapi token:"), yapiTokenText, 1, false)
-                .addLabeledComponent(new JBLabel("yapi project id:"), yapiProjectIdText, 1, false)
+                .addLabeledComponent(new JBLabel("yapi项目id:"), yapiProjectIdText, 1, false)
                 .addLabeledComponent(new JBLabel("全局排除字段(逗号连接):"), excludeFieldText, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();

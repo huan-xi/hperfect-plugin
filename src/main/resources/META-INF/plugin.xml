@@ -25,7 +25,12 @@
     </extensions>
     <idea-version since-build="145.0" until-build="213.*"/>
     <actions>
-        <action id="UploadToYapi" class="com.gitee.hperfect.yapi.action.UploadToYapiAction" text="上传到yapi"
+        <action id="UploadToYapi" class="com.gitee.hperfect.action.UploadToYapiAction" text="上传到yapi"
+                description="UploadToYapi">
+            <add-to-group group-id="EditorLangPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt u"/>
+        </action>
+        <action id="ExecuteApi" class="com.gitee.hperfect.action.ExecuteApiAction" text="执行该api"
                 description="UploadToYapi">
             <add-to-group group-id="EditorLangPopupMenu" anchor="first"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt u"/>
@@ -40,8 +45,8 @@
     </actions>
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable parentId="tools" instance="com.gitee.hperfect.settings.AppSettingsConfigurable"
-                                 id="org.intellij.sdk.settings.AppSettingsConfigurable"
-                                 displayName="yapi项目配置"/>
+                             id="org.intellij.sdk.settings.AppSettingsConfigurable"
+                             displayName="yapi项目配置"/>
 
         <projectService serviceImplementation="com.gitee.hperfect.settings.AppSettingsState"/>
     </extensions>

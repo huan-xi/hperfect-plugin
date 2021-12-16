@@ -7,7 +7,6 @@ import cn.hutool.http.HttpUtil;
 import com.gitee.hperfect.settings.AppSettingsState;
 import com.gitee.hperfect.utils.ClipboardUtils;
 import com.gitee.hperfect.utils.MessageUtils;
-import com.gitee.hperfect.yapi.action.UploadToYapiAction;
 import com.gitee.hperfect.yapi.dto.*;
 import com.gitee.hperfect.yapi.model.ApiCat;
 import com.google.gson.Gson;
@@ -16,9 +15,7 @@ import com.gitee.hperfect.utils.YapiTypeUtils;
 import com.gitee.hperfect.yapi.config.Yapis;
 import com.gitee.hperfect.yapi.model.ApiModel;
 import com.gitee.hperfect.yapi.model.ApiParamModelNode;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.MessageType;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -72,7 +69,7 @@ public class YapiUploadService {
                     apiDto.setResBody(gson.toJson(toYapiTypeDto(returnType)));
                 }
                 apiDto.setReqBodyOther(gson.toJson(toYapiTypeDto(api.getBodyParams())));
-                String resp = HttpUtil.post(settings.getYapiHost() + Yapis.SAVE, gson.toJson(apiDto));
+                String resp = HttpUtil.post(settings.getYapiHost() + Yapis.SAVE, gson.toJson(apiDto), 1000);
                 if (YapiResponse.isSuccess(resp)) {
                     success++;
                     Type type = new TypeToken<YapiResponse<List<SaveApiVo>>>() {

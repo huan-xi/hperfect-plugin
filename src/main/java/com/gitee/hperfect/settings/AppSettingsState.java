@@ -12,9 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Supports storing the application settings in a persistent way.
- * The {@link State} and {@link Storage} annotations define the name of the data and the file name where
- * these persistent application settings are stored.
+ * 设置保存状态
+ *
  * @author huanxi
  */
 @Getter
