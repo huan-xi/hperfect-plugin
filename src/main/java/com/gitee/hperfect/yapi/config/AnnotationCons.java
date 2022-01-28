@@ -1,6 +1,8 @@
 package com.gitee.hperfect.yapi.config;
 
 /**
+ * 注解支持
+ *
  * @author huanxi
  * @version 1.0
  * @date 2021/2/2 7:50 下午

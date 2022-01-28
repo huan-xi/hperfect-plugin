@@ -1,6 +1,7 @@
 package com.gitee.hperfect.yapi.parse;
 
 import cn.hutool.core.util.StrUtil;
+import com.gitee.hperfect.utils.YapiTypeUtils;
 import lombok.Data;
 import lombok.ToString;
 
@@ -22,9 +23,11 @@ public class GenericType {
         this.className = className;
         this.genericClass = genericClass;
     }
+
     public GenericType() {
 
     }
+
     public static GenericType parse(String str) {
         GenericType genericType = new GenericType();
         if (str.contains("<")) {
@@ -36,5 +39,9 @@ public class GenericType {
             genericType.setClassName(str);
         }
         return genericType;
+    }
+
+    public boolean isArray() {
+        return YapiTypeUtils.isArrayType(className);
     }
 }

@@ -3,6 +3,7 @@
 package com.gitee.hperfect.settings;
 
 import cn.hutool.core.util.StrUtil;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -18,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
  */
 @Getter
 @Setter
-@State(name = "org.intellij.sdk.settings.AppSettingsState", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "org.intellij.sdk.settings.AppSettingsState",
+        storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
 
     private String yapiToken;
@@ -27,6 +29,7 @@ public class AppSettingsState implements PersistentStateComponent<AppSettingsSta
     private String excludeFields;
 
     public static AppSettingsState getInstance(Project project) {
+//        return ApplicationManager.getApplication().getService(AppSettingsState.class);
         return ServiceManager.getService(project, AppSettingsState.class);
     }
 

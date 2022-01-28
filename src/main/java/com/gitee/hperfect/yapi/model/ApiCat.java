@@ -5,6 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * api分类
+ *
  * @author huanxi
  * @version 1.0
  * @date 2021/2/4 10:58 上午
@@ -14,7 +16,6 @@ public class ApiCat {
     private String catName;
 
     private String catDesc;
-
 
     private List<ApiModel> apiModelList;
 }

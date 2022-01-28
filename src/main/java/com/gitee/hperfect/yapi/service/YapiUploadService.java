@@ -31,16 +31,18 @@ import java.util.List;
 public class YapiUploadService {
 
     private final AppSettingsState settings;
+    private final Project project;
 
     public YapiUploadService(Project project) {
         this.settings = AppSettingsState.getInstance(project);
+        this.project = project;
     }
 
     private final Gson gson = new Gson();
 
     public void upload(ApiCat apiCat) {
         if (!settings.validateYapi()) {
-            MessageUtils.error("请在 设置->tools->yapi项目配置 中配置相关属性");
+            MessageUtils.error(project,"请在 设置->tools->yapi项目配置 中配置相关属性");
             return;
         }
 
@@ -85,7 +87,7 @@ public class YapiUploadService {
             upload(apiCat);
             return;
         }
-        MessageUtils.info(String.format("总共解析接口:%d个,成功上传:%d个,api已复制到剪切板", apis.size(), success));
+        MessageUtils.info(project,String.format("总共解析接口:%d个,成功上传:%d个,api已复制到剪切板", apis.size(), success));
         if (lastId != null) {
             ClipboardUtils.sendToClipboard(String.format("%s/project/%s/interface/api/%s", settings.getYapiHost(), settings.getYapiProjectId(), lastId));
         } else if (catId != null) {
@@ -112,7 +114,6 @@ public class YapiUploadService {
                     dto.setType("object");
                     yapiTypeDto.setItems(dto);
                 }
-
             } else {
                 yapiTypeDto.setTitle(paramModelNode.getName());
                 yapiTypeDto.setDescription(paramModelNode.getDesc());

@@ -18,8 +18,9 @@ import java.util.*;
  * @date 2019/1/30 9:58 AM
  */
 public class YapiTypeUtils {
-
-    @NonNls
+    /**
+     * 基本类型
+     */
     public static final Map<String, Object> NORMAL_TYPES = new HashMap<>();
 
     public static final Map<String, Object> NORMAL_TYPES_PACKAGES = new HashMap<>();
@@ -54,7 +55,6 @@ public class YapiTypeUtils {
         NORMAL_TYPES.put("Double", 0.0D);
         NORMAL_TYPES.put("String", "String");
         NORMAL_TYPES.put("Map", null);
-
 
 
         NORMAL_TYPES.put("Date", new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));

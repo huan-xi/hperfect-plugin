@@ -1,6 +1,7 @@
 package com.gitee.hperfect.yapi.parse.parser.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.gitee.hperfect.utils.MessageUtils;
 import com.gitee.hperfect.yapi.config.AnnotationCons;
 import com.gitee.hperfect.yapi.model.ApiModel;
 import com.gitee.hperfect.yapi.model.ApiParamModelNode;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author huanxi
  * @version 1.0
  * @date 2021/2/4 11:30 上午
@@ -73,16 +73,18 @@ public class DefaultApiModelParser implements ApiModelParser {
 
     /**
      * 解析返回值类型
+     *
      * @param method
      * @param project
      * @return
      */
     private ApiParamModelNode parseApiReturnType(PsiMethod method, Project project) {
         PsiType returnType = method.getReturnType();
-        if (returnType != null) {
-            return this.apiModelPropertyParser.parseObjectType(GenericType.parse(returnType.getCanonicalText()), project);
+        if (returnType == null) {
+            return null;
         }
-        return null;
+        GenericType genericType = GenericType.parse(returnType.getCanonicalText());
+        return apiModelPropertyParser.parseObjectType(genericType, project);
     }
 
     /**

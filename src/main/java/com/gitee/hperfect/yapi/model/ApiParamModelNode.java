@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 树形
+ * api参数节点(递归)
  *
  * @author huanxi
  * @version 1.0
@@ -24,7 +24,11 @@ public class ApiParamModelNode {
      * 参数类型(最终为string)
      */
     private String type;
-
+    /**
+     * 如果type==array 则 代表元素的类型
+     * type 非数组,则属性
+     *
+     */
     private List<ApiParamModelNode> paramModelList = new ArrayList<>();
     /**
      * 详情

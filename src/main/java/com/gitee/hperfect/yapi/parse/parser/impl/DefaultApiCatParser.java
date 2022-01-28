@@ -43,12 +43,13 @@ public class DefaultApiCatParser implements ApiCatParser {
             PsiAnnotation controller = psiClass.getAnnotation(AnnotationCons.CONTROLLER);
             if (controller == null) {
                 //不是controller
+                MessageUtils.error(project, "没有解析到controller");
                 return null;
             }
         }
         String catRoute = this.parseCatRoute(psiClass);
         if (catRoute == null) {
-            MessageUtils.error("没有解析到路由");
+            MessageUtils.error(project, "没有解析到路由");
             //没有解析到路由
             return null;
         }

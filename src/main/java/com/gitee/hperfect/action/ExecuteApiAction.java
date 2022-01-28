@@ -47,7 +47,7 @@ public class ExecuteApiAction extends AnAction {
         PsiClass selectedClass = (PsiClass) PsiTreeUtil.getContextOfType(referenceAt, new Class[]{PsiClass.class});
         PsiMethod selectedMethod = (PsiMethod) PsiTreeUtil.getContextOfType(referenceAt, new Class[]{PsiMethod.class});
         if (selectedClass == null) {
-            MessageUtils.error("选择class为空");
+            MessageUtils.error(project,"选择class为空");
             return;
         }
         //解析api
@@ -57,7 +57,7 @@ public class ExecuteApiAction extends AnAction {
         try {
             uploadService.upload(cat);
         } catch (Throwable throwable) {
-            MessageUtils.error("上传发生错误:" + throwable.getMessage());
+            MessageUtils.error(project,"上传发生错误:" + throwable.getMessage());
         }
     }
 }

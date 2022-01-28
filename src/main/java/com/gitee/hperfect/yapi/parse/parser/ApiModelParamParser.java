@@ -3,6 +3,7 @@ package com.gitee.hperfect.yapi.parse.parser;
 import com.gitee.hperfect.yapi.model.ApiParamModelNode;
 import com.gitee.hperfect.yapi.parse.GenericType;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 
@@ -39,4 +40,12 @@ public interface ApiModelParamParser {
      * @return
      */
     ApiParamModelNode parseObjectType(GenericType genericType, Project project);
+
+    /**
+     * 解析枚举描述
+     * @param desc
+     * @param psiClass
+     * @return
+     */
+    String parseEnumDesc(String desc, PsiClass psiClass);
 }

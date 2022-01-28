@@ -22,6 +22,10 @@
                     factoryClass="com.gitee.hperfect.task.windows.TestWindowsFactory">
 
         </toolWindow>-->
+        <extensions defaultExtensionNs="com.intellij">
+            <notificationGroup id="yapiUploader Notification Group" displayType="BALLOON" key="notification.group.yapiUploader"/>
+
+        </extensions>
     </extensions>
     <idea-version since-build="145.0" until-build="213.*"/>
     <actions>
@@ -33,7 +37,7 @@
         <action id="ExecuteApi" class="com.gitee.hperfect.action.ExecuteApiAction" text="执行该api"
                 description="UploadToYapi">
             <add-to-group group-id="EditorLangPopupMenu" anchor="first"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt u"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt e"/>
         </action>
         <!-- <action id="ShowHello" class="com.gitee.hperfect.tool.ShowHelloAction" text="ShowHello">
              <add-to-group group-id="ToolsMenu" anchor="first"/>
