@@ -272,7 +272,6 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
                 }
                 if (filedGenericType.isArray()) {
                     //数组属性名称和描述
-                    apiParamModelNode.setType("array");
                     ApiParamModelNode arrayNode = parseFiledArray(field, filedGenericType, project);
                     apiParamModelNode.getParamModelList().add(arrayNode);
                     continue;
