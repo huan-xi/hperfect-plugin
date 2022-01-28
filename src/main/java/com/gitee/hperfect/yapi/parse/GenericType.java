@@ -3,7 +3,6 @@ package com.gitee.hperfect.yapi.parse;
 import cn.hutool.core.util.StrUtil;
 import com.gitee.hperfect.utils.YapiTypeUtils;
 import lombok.Data;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -43,5 +42,10 @@ public class GenericType {
 
     public boolean isArray() {
         return YapiTypeUtils.isArrayType(className);
+    }
+
+
+    public boolean isGeneric() {
+        return YapiTypeUtils.GENERIC_LIST.contains(genericClass);
     }
 }

@@ -1,6 +1,7 @@
 package com.gitee.hperfect.yapi.parse.parser.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gitee.hperfect.settings.AppSettingsState;
 import com.gitee.hperfect.utils.MessageUtils;
@@ -187,7 +188,7 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
      *
      * @param genericType
      * @param project
-     * @param apiParamModelNode 用于递归传递
+     * @param apiParamModelNode 用于递归传递(如果不为空将解析到当前node上)
      * @return
      */
     public ApiParamModelNode parseObjectType(GenericType genericType, Project project, ApiParamModelNode apiParamModelNode) {
@@ -209,6 +210,17 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
             apiParamModelNode.setDesc(parseEnumDesc(apiParamModelNode.getDesc(), psiClass));
             return apiParamModelNode;
         }
+        if (genericType.isArray()) {
+            //泛型中的泛型 List<Result>
+            //name 占位
+            apiParamModelNode.setType("array");
+            ApiParamModelNode arrayNode = parseObjectType(GenericType.parse(genericType.getGenericClass()), project);
+            arrayNode.setName(apiParamModelNode.getName());
+            arrayNode.setType(genericType.getGenericClass());
+            apiParamModelNode.getParamModelList()
+                    .add(arrayNode);
+            return apiParamModelNode;
+        }
         //获取排除属性
         List<String> excludeFieldList = new ArrayList<>();
         List<String> pointList = new ArrayList<>();
@@ -221,31 +233,34 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
         //模型注解排除
         String apiParam = ParseUtils.getJavaDocTagValue(psiClass.getDocComment(), "apiParam");
         parseSetField(excludeFieldList, pointList, apiParam);
-        if (genericType.isArray()) {
-            //泛型中的泛型
-            GenericType genericTypeType = GenericType.parse(genericType.getGenericClass());
-            return parseObjectType(genericTypeType, project, null);
-        }
         //解析字段类型
         for (PsiField field : psiClass.getAllFields()) {
             if (field.getModifierList() != null && field.getModifierList().hasModifierProperty("final")) {
                 continue;
             }
-            if (CollUtil.isNotEmpty(pointList)) {
-                //指定优先
-                if (!pointList.contains(field.getName())) {
-                    continue;
-                }
-            } else if (CollUtil.isNotEmpty(excludeFieldList)) {
-                //排除
-                if (excludeFieldList.contains(field.getName())) {
-                    continue;
-                }
+            if (isSkip(excludeFieldList, pointList, field)) {
+                continue;
             }
             String filedTypeName = field.getType().getCanonicalText();
             System.out.printf("开始解析对象%s,属性:%s,类型:%s\n", psiClass.getName(), field.getName(), filedTypeName);
+            //如果当前类型是泛型 替换成泛型真实类型
+            if (YapiTypeUtils.GENERIC_LIST.contains(filedTypeName)) {
+                GenericType genericTypeType = GenericType.parse(genericType.getGenericClass());
+                ApiParamModelNode propNode = new ApiParamModelNode();
+                propNode.setName(field.getName());
+                propNode.setDesc(parsePropDesc(field));
+                //解析参数到属性上
+                parseObjectType(genericTypeType, project, propNode);
+
+                apiParamModelNode
+                        .getParamModelList()
+                        .add(propNode);
+                continue;
+            }
+            //map 类型
             if (YapiTypeUtils.isMapType(GenericType.parse(filedTypeName).getClassName())) {
-                apiParamModelNode.getParamModelList().add(parseObjectOrNormal(field, GenericType.parse(filedTypeName), project));
+                apiParamModelNode.getParamModelList()
+                        .add(parseObjectOrNormal(field, GenericType.parse(filedTypeName), project));
                 continue;
             }
             //是否是基本类型
@@ -257,8 +272,7 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
                 }
                 if (filedGenericType.isArray()) {
                     //数组属性名称和描述
-                    apiParamModelNode.setName(field.getName());
-                    apiParamModelNode.setDesc(parsePropDesc(field));
+                    apiParamModelNode.setType("array");
                     ApiParamModelNode arrayNode = parseFiledArray(field, filedGenericType, project);
                     apiParamModelNode.getParamModelList().add(arrayNode);
                     continue;
@@ -272,7 +286,7 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
             }
             //如果是(当前类)泛型 T t 处理
             String genericClass = genericType.getGenericClass();
-            if (YapiTypeUtils.GENERIC_LIST.contains(filedTypeName)) {
+            if (genericType.isGeneric()) {
                 if (StrUtil.isBlank(genericClass) || "?".equals(genericClass)) {
                     //未知泛型处理
                     filedTypeName = "java.lang.Object";
@@ -282,7 +296,8 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
                 }
                 if (YapiTypeUtils.isArrayType(genericClass)) {
                     System.out.printf("开始解析对象属性%s,数组属性\n", field.getName());
-                    apiParamModelNode.getParamModelList().add(parseFiledArray(field, GenericType.parse(genericClass), project));
+                    ApiParamModelNode arrayNode = parseFiledArray(field, GenericType.parse(genericClass), project);
+                    apiParamModelNode.getParamModelList().add(arrayNode);
                     continue;
                 }
             }
@@ -292,6 +307,17 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
         }
 
         return apiParamModelNode;
+    }
+
+    private boolean isSkip(List<String> excludeFieldList, List<String> pointList, PsiField field) {
+        if (CollUtil.isNotEmpty(pointList)) {
+            //指定优先
+            return !pointList.contains(field.getName());
+        } else if (CollUtil.isNotEmpty(excludeFieldList)) {
+            //排除
+            return excludeFieldList.contains(field.getName());
+        }
+        return false;
     }
 
     /**
@@ -342,7 +368,8 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
             //未知泛型处理
             genericType.setClassName("java.lang.Object");
         }
-        paramModelNode.setParamModelList(CollUtil.toList(parseObjectOrNormal(field, GenericType.parse(genericClass), project)));
+        ApiParamModelNode apiParamModelNode = parseObjectOrNormal(field, GenericType.parse(genericClass), project);
+        paramModelNode.setParamModelList(ListUtil.toList(apiParamModelNode));
         return paramModelNode;
     }
 
