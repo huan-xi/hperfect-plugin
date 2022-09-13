@@ -23,7 +23,7 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2020.3.1'
-    localPath '/Applications/IntelliJIDEACE.app'
+    localPath '/Applications/IntelliJ IDEA CE.app/Contents'
     pluginName 'yapi-parser'
     updateSinceUntilBuild false
     sameSinceUntilBuild false

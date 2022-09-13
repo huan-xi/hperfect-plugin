@@ -58,7 +58,8 @@ public class ParseUtils {
         String value = null;
         PsiNameValuePair[] attributes = annotation.getParameterList().getAttributes();
         for (PsiNameValuePair attribute : attributes) {
-            boolean isValue = (attribute.getName() == null && name == null) || (name == null && "value".equals(attribute.getName()));
+            boolean isValue = (attribute.getName() == null && name == null) ||
+                    (name == null && "value".equals(attribute.getName()));
             if (isValue || (name != null && name.equals(attribute.getName()))) {
                 value = attribute.getLiteralValue();
             }

@@ -29,7 +29,8 @@ public interface ApiModelParser {
     /**
      * 从方法中解析apiName名称
      * 1. swagger ApiOperation 注解
-     * 2. 方法注释
+     * 2. 方法注解
+     * 3. 方法注释
      *
      * @param method
      * @return

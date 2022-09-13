@@ -34,7 +34,7 @@ public class YapiTypeUtils {
      * 泛型列表
      */
     public static final List<String> GENERIC_LIST = new ArrayList<>();
-    public static final List<String> ARRAY_TYPE_LIST = ListUtil.toList("java.util.List", "java.lang.Iterable", "java.util.ArrayList");
+    public static final List<String> ARRAY_TYPE_LIST = ListUtil.toList("java.util.List", "java.lang.Iterable","java.util.Collection", "java.util.ArrayList");
     public static final List<String> MAP_TYPE_LIST = ListUtil.toList("java.util.Map");
 
     static {

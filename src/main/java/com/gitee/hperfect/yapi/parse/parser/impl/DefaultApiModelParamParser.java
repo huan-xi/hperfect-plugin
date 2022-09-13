@@ -81,7 +81,7 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
         StringBuilder remarkBuilder = new StringBuilder();
         for (PsiField psiField : fieldList) {
             String comment = ParseUtils.getJavaDoc(psiField.getDocComment());
-            comment = Strings.isNullOrEmpty(comment) ? comment : "-" + comment;
+            comment = "" + (StrUtil.isBlank(comment) ? "暂无注释" : comment);
             remarkBuilder.append(psiField.getName()).append(comment);
             remarkBuilder.append(";");
         }
@@ -215,6 +215,9 @@ public class DefaultApiModelParamParser implements ApiModelParamParser {
             //name 占位
             apiParamModelNode.setType("array");
             ApiParamModelNode arrayNode = parseObjectType(GenericType.parse(genericType.getGenericClass()), project);
+            if (arrayNode == null) {
+                arrayNode = new ApiParamModelNode();
+            }
             arrayNode.setName(apiParamModelNode.getName());
             arrayNode.setType(genericType.getGenericClass());
             apiParamModelNode.getParamModelList()

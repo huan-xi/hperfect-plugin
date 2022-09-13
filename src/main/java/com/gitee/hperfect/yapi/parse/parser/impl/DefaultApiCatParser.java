@@ -54,7 +54,8 @@ public class DefaultApiCatParser implements ApiCatParser {
             return null;
         }
         ApiCat apiCat = this.parseCatNameDesc(psiClass);
-        apiCat.setApiModelList(apiModelParser.parseApiModel(psiClass.getMethods(), pointMethod, catRoute, project));
+        PsiMethod[] methods = psiClass.getAllMethods();
+        apiCat.setApiModelList(apiModelParser.parseApiModel(methods, pointMethod, catRoute, project));
         return apiCat;
     }
 

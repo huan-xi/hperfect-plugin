@@ -12,10 +12,10 @@ public interface AnnotationCons {
     String REST_CONTROLLER = "org.springframework.web.bind.annotation.RestController";
     String CONTROLLER = "org.springframework.web.bind.annotation.Controller";
     String REQUEST_MAPPING = "org.springframework.web.bind.annotation.RequestMapping";
+    String REQUEST_PARAM = "org.springframework.web.bind.annotation.RequestParam";
+    String REQUEST_BODY = "org.springframework.web.bind.annotation.RequestBody";
     String API = "io.swagger.annotations.Api";
     String API_OPERATION = "io.swagger.annotations.ApiOperation";
     String API_PARAM = "io.swagger.annotations.ApiParam";
-    String REQUEST_PARAM = "org.springframework.web.bind.annotation.RequestParam";
     String API_MODEL_PROPERTY = "io.swagger.annotations.ApiModelProperty";
-    String REQUEST_BODY = "org.springframework.web.bind.annotation.RequestBody";
 }

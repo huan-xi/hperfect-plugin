@@ -43,7 +43,6 @@ public class ExecuteApiAction extends AnAction {
 
         YapiUploadService uploadService = new YapiUploadService(e.getProject());
         PsiElement referenceAt = psiFile.findElementAt(editor.getCaretModel().getOffset());
-
         PsiClass selectedClass = (PsiClass) PsiTreeUtil.getContextOfType(referenceAt, new Class[]{PsiClass.class});
         PsiMethod selectedMethod = (PsiMethod) PsiTreeUtil.getContextOfType(referenceAt, new Class[]{PsiMethod.class});
         if (selectedClass == null) {

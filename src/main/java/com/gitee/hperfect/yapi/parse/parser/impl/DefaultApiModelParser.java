@@ -1,5 +1,6 @@
 package com.gitee.hperfect.yapi.parse.parser.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gitee.hperfect.utils.MessageUtils;
 import com.gitee.hperfect.yapi.config.AnnotationCons;
@@ -17,6 +18,7 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.javadoc.PsiDocComment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -138,10 +140,16 @@ public class DefaultApiModelParser implements ApiModelParser {
         if (parameterList.length > 0) {
             for (PsiParameter psiParameter : parameterList) {
                 //没有requestBody注解,否则为json参数
-                PsiAnnotation requestBody = psiParameter.getAnnotation(AnnotationCons.REQUEST_BODY);
-                if (requestBody != null) {
+                PsiAnnotation[] annotations = psiParameter.getAnnotations();
+                //非空 且 不包含
+                if (annotations.length > 0 && !CollUtil.contains(Arrays.asList(annotations), i -> StrUtil.equals(i.getQualifiedName(), AnnotationCons.REQUEST_PARAM))) {
                     continue;
                 }
+                /*PsiAnnotation requestBody = psiParameter.getAnnotation(AnnotationCons.REQUEST_BODY);
+                if (requestBody != null) {
+                    continue;
+                }*/
+
                 ApiParamModelNode apiParamModel = this.apiModelPropertyParser.parseMethodFiled(psiParameter, method, project);
                 if (apiParamModel != null) {
                     params.add(apiParamModel);
